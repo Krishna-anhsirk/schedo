@@ -1,64 +1,92 @@
 import styled from "styled-components";
-import TodoList from "./components/TodoList";
+import { useEffect, useState } from "react";
+import TopBar from "./components/TopBar";
+import Header from "./components/Header";
+import { RotateCcw, Copyright, Github } from "lucide-react";
+import CreateScedoBar from "./components/CreateSchedoBar";
+import SchedoList from "./components/SchedoList";
 
-const Root = styled.div`
+const ResetDate = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+// Total viewport height - footer height
+const AppLayout = styled.div`
+  min-height: calc(100vh - 24px);
+`;
+
+const Footer = styled.div`
+  position: relative;
+  left: 0;
+  bottom: 0;
+  display: flex;
   justify-content: center;
   align-items: center;
+  bottom: 5px;
+  font-size: 0.9rem;
+  color: #31363f;
 `;
 
 // Time stamps are stored in this format -> ISO 8601 format
 // Making data hardcoded for now
-const todoEntries = [
-  {
-    id: 1,
-    title: "Pick up groceries",
-    description: `
-      List of groceries basically
-      1. Aloo (1kg)
-      2. Tomato (2kg)
-      3. Onion (3kg)
-      `,
-    done: false, // Boolean
-    date_due: "some date string",
-    date_created: "2024-03-26T15:30:00.000Z",
-    date_updated: "some date string",
-    date_deleted: "some date string",
-  },
-  {
-    id: 2,
-    title: "Start packing essentials for trip",
-    description: `
-      List
-      1. Soap (1)
-      2. Gifts I bought for parents
-      3. Sweets (5 boxes)
-      `,
-    done: false, // Boolean
-    date_due: "some date string",
-    date_created: "2024-03-27T15:30:00.000Z",
-    date_updated: "some date string",
-    date_deleted: "some date string",
-  },
-  {
-    id: 3,
-    title: "Complete reading the novel",
-    description: null,
-    done: false, // Boolean
-    date_due: "some date string",
-    date_created: "2024-03-28T15:30:00.000Z",
-    date_updated: "some date string",
-    date_deleted: "some date string",
-  },
-];
 
 function App() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [schedos, setSchedos] = useState([]);
+
+  useEffect(() => {
+    const schedosData = JSON.parse(localStorage.getItem("schedos"));
+    if (schedosData && schedosData.length !== 0) {
+      setSchedos(schedosData);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("schedos", JSON.stringify(schedos));
+  }, [schedos]);
+
   return (
-    <Root>
-      <div>Start coding!</div>
-      <TodoList todos={todoEntries} />
-    </Root>
+    <>
+      <AppLayout>
+        {/* TODO: Style thos differently */}
+        <TopBar />
+
+        <ResetDate onClick={() => setSelectedDate(new Date())}>
+          Get to today
+          <RotateCcw />
+        </ResetDate>
+
+        <Header
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          schedos={schedos}
+        />
+
+        <CreateScedoBar
+          schedos={schedos}
+          setSchedos={setSchedos}
+          selectedDate={selectedDate}
+        />
+
+        {schedos.length > 0 && (
+          <SchedoList
+            schedos={schedos}
+            setSchedos={setSchedos}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+        )}
+      </AppLayout>
+      {/* TODO: Github is deprecated in lucide find alternatives, 
+      style footer differently */}
+      <Footer>
+        <Copyright size={20} /> &nbsp; 2024 Krishna Teja &nbsp;{" "}
+        <Github sze={20} /> &nbsp; Krishna-anhsirk
+      </Footer>
+    </>
   );
 }
 
