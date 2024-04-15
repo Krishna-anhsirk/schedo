@@ -15,17 +15,16 @@ const ResetDate = styled.div`
 
 // Total viewport height - footer height
 const AppLayout = styled.div`
-  min-height: calc(100vh - 24px);
+  min-height: calc(100vh - 40px);
 `;
 
 const Footer = styled.div`
   position: relative;
   left: 0;
-  bottom: 0;
+  bottom: -2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  bottom: 5px;
   font-size: 0.9rem;
   color: #31363f;
 `;
@@ -83,7 +82,7 @@ function App() {
       {/* TODO: Github is deprecated in lucide find alternatives, 
       style footer differently */}
       <Footer>
-        <Copyright size={20} /> &nbsp; 2024 Krishna Teja &nbsp;{" "}
+        <Copyright size={20} /> &nbsp; 2024 Krishna Teja &nbsp; &nbsp;
         <Github sze={20} /> &nbsp; Krishna-anhsirk
       </Footer>
     </>
